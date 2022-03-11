@@ -1,19 +1,25 @@
 package com.educandoweb.course.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 // Serializable é para quando a gente quer os objetos possam ser transformados em cadeias de bytes. 
 // Isso para que o objeto possa trafegar na rede, ser gravado em arquivos, etc.
 
 // Temos que adicionar nessa classe algumas anotations do JPA para instruir para ele como ele vai 
 // converter os objetos para o modelo relacional
+// A annotation @Table personaliza o nome da tabela para o Jpa. No caso vamos personalizar para tb_user
 @Entity
+@Table(name = "tb_user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -25,6 +31,12 @@ public class User implements Serializable {
 	private String email;
 	private String phone;
 	private String password;
+	
+	// Quando é uma collection só tem o método .get (isso porque não vamos setar uma lista, apenas adicionar e remover nela)
+	// Para transformar este atributo numa chave estrangeira vamos adicionar uma annotation @OneToMany (usuário - um para muitos - pedidos)
+	// teremos que adicionar também o atributo que está do outro lado, no caso na classe Order
+	@OneToMany(mappedBy = "client")
+	private List<Order> orders = new ArrayList<>();
 
 	public User() {
 	}
@@ -76,6 +88,10 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Order> getOrders() {
+		return orders;
 	}
 
 	@Override
