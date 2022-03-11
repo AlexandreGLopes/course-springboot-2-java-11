@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
@@ -36,6 +37,11 @@ public class Order implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	
+	// Não vamos fazer o orderStatus como um tipo OrderStatus. Mas como um Integer. Para dizer explicitamente  que estamos gravando no
+	// banco de dados um tipo inteiro. Mas isso vai fazer que tenhamos que arrumar umas coisas no construtor e nos getters/setters
+	// porque pro externo vamos manter o tipo OrderStatus
+	private Integer orderStatus;
+	
 	// para transformar este atributo numa chave estrangeira vamos adicionar uma annotation @ManyToOne (pedidos - muitos para um - usuário)
 	// mais uma annotation será necessária @JoinColumn(name = "client_id"). o name é o nome da chave estrangeira
 	@ManyToOne
@@ -45,10 +51,12 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment, User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		super();
 		this.id = id;
 		this.moment = moment;
+		// por causa das implementações diferentes no Enum e da escolha de fazer ele ser um Integer vamos chamar o setter
+		setOrderStatus(orderStatus);
 		this.client = client;
 	}
 
@@ -66,6 +74,19 @@ public class Order implements Serializable {
 
 	public void setMoment(Instant moment) {
 		this.moment = moment;
+	}
+	
+	public OrderStatus getOrderStatus() {
+		// usando o método estático do OrderStatus para recuperar um OrderStatus pelo valor do Integer
+		return OrderStatus.valueOf(orderStatus);
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		// fazendo o inverso do getOrderStatus e setando um OrderStatus pelo .getCode que pega o int de um OrderStatus
+		// e coloca no atributo Integer desta classe. Só vamos fazer um teste para ver se o valor passado não for nulo
+		if (orderStatus != null) {
+			this.orderStatus = orderStatus.getCode();
+		}
 	}
 
 	public User getClient() {
