@@ -12,6 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+
 // Serializable é para quando a gente quer os objetos possam ser transformados em cadeias de bytes. 
 // Isso para que o objeto possa trafegar na rede, ser gravado em arquivos, etc.
 
@@ -28,6 +31,9 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	// Annotation para formatar o Json e garantir que o instante seja mostrado no Json no formato de String do ISO 8601
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	
 	// para transformar este atributo numa chave estrangeira vamos adicionar uma annotation @ManyToOne (pedidos - muitos para um - usuário)

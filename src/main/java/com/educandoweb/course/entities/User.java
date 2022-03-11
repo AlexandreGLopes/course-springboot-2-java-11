@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 // Serializable é para quando a gente quer os objetos possam ser transformados em cadeias de bytes. 
 // Isso para que o objeto possa trafegar na rede, ser gravado em arquivos, etc.
 
@@ -35,6 +37,11 @@ public class User implements Serializable {
 	// Quando é uma collection só tem o método .get (isso porque não vamos setar uma lista, apenas adicionar e remover nela)
 	// Para transformar este atributo numa chave estrangeira vamos adicionar uma annotation @OneToMany (usuário - um para muitos - pedidos)
 	// teremos que adicionar também o atributo que está do outro lado, no caso na classe Order
+	// Adicionamos a annotation @JsonIgnore porque estamos tento um loop infinito. Isso porque temos uma associação de mão dupla de User para Order
+	// e de Order para User. Aí vai dar uma exception e o Json vai chamar resultados infinitamente. Adicionando essa annotation isso é prevenido
+	// Vamos colocar a annotation @JsonIgnore aqui no User e não no Order para salvar recursos da máquina. Deixamos sempre do lado do OneToMany.
+	// Isso é fazer o lazy loading. Só verá os pedidos relacionados ao cliente se acionar o objeto do lado ManyToOne 
+	@JsonIgnore
 	@OneToMany(mappedBy = "client")
 	private List<Order> orders = new ArrayList<>();
 
