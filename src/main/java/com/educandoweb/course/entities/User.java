@@ -47,7 +47,8 @@ public class User implements Serializable {
 
 	public User() {
 	}
-
+	
+	// Não tem as coleções no construtor (no caso o List<Order> porque ela já é instanciada
 	public User(Long id, String name, String email, String phone, String password) {
 		super();
 		this.id = id;
