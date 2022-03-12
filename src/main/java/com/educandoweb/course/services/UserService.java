@@ -43,5 +43,23 @@ public class UserService {
 	public void delete(Long id) {
 		repository.deleteById(id);
 	}
+	
+	// vai ser um public User porque vai retornar um usuário atualizado
+	// método com o Long para recuperar o user do banco de dados e um User obj contendo os dados para serem atualizados
+	public User update(Long id, User obj) {
+		// o .getOne() vai instanciar um User sem ir no banco de dados. Ele só vai deixar um objeto monitorado pelo Jpa para
+		// trabalhar com ele e em seguida efetuar uma opreçaão com o banco de dados. É melhor que trabalhar com o findById()
+		// porque ele só trabalha com o banco no final. Então, poupa recursos
+		User entity = repository.getOne(id);
+		updateData(entity, obj);
+		return repository.save(entity);
+	}
+
+	private void updateData(User entity, User obj) {
+		// só vamos deixar atualizar alguns campos. Não vamos deixar atualizar o Id e nem a senha
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
+	}
 
 }
