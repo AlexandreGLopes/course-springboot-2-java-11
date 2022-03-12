@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.educandoweb.course.entities.pk.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Serializable é para quando a gente quer os objetos possam ser transformados em cadeias de bytes. 
 //Isso para que o objeto possa trafegar na rede, ser gravado em arquivos, etc.
@@ -24,8 +25,9 @@ public class OrderItem implements Serializable {
 	// o primeiro atributo da classe será o identificador, correspondente à chave primária
 	// o tipo dele vai ser OrderItemPK
 	// Neste caso não vamos colocar o @Id, mas vamos colocar o @EmbeddedId por se tratar de um id composto
+	// Além disso, sempre que criar uma classe auxiliar que é o id composto temos que instanciar ela ja de cara para não dar NUllPointerException 
 	@EmbeddedId
-	private OrderItemPK id;
+	private OrderItemPK id = new OrderItemPK();
 	
 	private Integer quantity;
 	// O price abaixo já está no Product. Mas aqui ele será um histórico do preço do produto, caso ele mude no futuro
@@ -45,7 +47,11 @@ public class OrderItem implements Serializable {
 	}
 	
 	// Abaixo temos os getters/setters do Order e do Product
-	// Isso porque para o exterior o item de pedido (OrderItem) não vai dar um getId com campo composto. Mas sim, vai dar um por um 
+	// Isso porque para o exterior o item de pedido (OrderItem) não vai dar um getId com campo composto. Mas sim, vai dar um por um
+	// Annotation @JsonIgnore: Aqui no OrderItem teremos que cortar a associação de mão dupla que temos com o Order. Por que aqui também dá um loop infinito por causa dessa associação
+	// só que como não temos o atributo Order, porque ele tem o atributo id e este que tem a associação com o Order, o que vamos fazer é cortar no .getOrder
+	// porque é ele que chama o pedido associado a esse item do pedido, e esse por sua vez chamava o item de pedido de novo e dava loop infinito
+	@JsonIgnore
 	public Order getOrder() {
 		return id.getOrder();
 	}

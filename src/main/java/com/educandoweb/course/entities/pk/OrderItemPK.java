@@ -19,6 +19,10 @@ public class OrderItemPK implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	// As relações aqui são da Muitos para Um porque cada item do pedido terá a mesma chave composta, esta aqui no caso.
+	// serão vários items no mesmo pedido
+	// mas também poderão ser vários pedidos com o mesmo item
+	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
 	private Order order;
