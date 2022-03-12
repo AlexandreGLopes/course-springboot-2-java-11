@@ -51,6 +51,7 @@ public class Order implements Serializable {
 	private User client;
 	
 	// Aqui colocamos id.order porque no OrderItem nós temos o id, e o id por sua vez é que tem o pedido
+	// ou seja, o parâmetro do annotation @OnToMany é feito pelo "id" que está na classe OrderItem e pelo ".order" que está na classe OrderItemPK (referindo ao "private Order order")
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
 	

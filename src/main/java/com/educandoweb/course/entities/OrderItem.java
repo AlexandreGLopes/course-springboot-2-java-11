@@ -60,6 +60,15 @@ public class OrderItem implements Serializable {
 		id.setOrder(order);
 	}
 	
+	/*
+	// COMENTADO PORQUE SE UTILIZARMOS O JSON IGNORE AQUI (E NÃO NO PRODUCT) NÓS VAMOS ACABAR PUXANDO O PRODUTO E VEREMOS A LISTA DE PEDIDOS DA
+	// QUAL ESSE PRODUTO FEZ PARTE. MAS QUEREMOS O CONTRÁRIO PELA REGRA DE NEGÓCIO. QUEREMOS PUXAR A LISTA DE PEDIDOS E VER OS PRODUTOS QUE FIZERAM PARTE DELA
+	// ENTÃO ESTAMOS "RETIRANDO" O @JsonIgnore DAQUI E COLOCANDO LÁ NO Product .getOrders()
+	
+	// Annotation @JsonIgnore: Aqui no OrderItem teremos que cortar a associação de mão dupla que temos com o Product pelo mesmo motivo do getOrder acima
+	@JsonIgnore
+	// 
+	*/
 	public Product getProduct() {
 		return id.getProduct();
 	}
