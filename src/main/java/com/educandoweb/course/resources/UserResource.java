@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,7 +78,7 @@ public class UserResource {
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-	// Para deletar no padrão REST temos que usar o MÉTODO DELETE
+	// Para deletar no padrão REST temos que usar o MÉTODO HTTP DELETE
 	// Então o annotation é @DeleteMapping e aqui vamos passar na url o valor do id do usuário. Para falar que a url vai ter um parametro temos que escrever a parte do value = "/{id}"
 	// O ResponseEntity não vai retornar nenhum corpo (body), então vai ser um tipo <Void>
 	// Para que o parâmetro Long id seja reconhecido como uma variável da Url é preciso adicionar a annotation @PathVariable
@@ -88,6 +89,15 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	
+	// Para atualizar um recurso no padrão REST temos que usar o MÉTODO HTTP PUT
+	// Então o annotation é @PutMapping
+	// Para que o parâmetro Long id seja reconhecido como uma variável da Url é preciso adicionar a annotation @PathVariable
+	// Para dizer que o objeto User obj do parâmetro vai chegar no modo JSON na hora de fazer a requisição. E para que esse JSON seja desserializado para um objeto User
+	// nós teremos que colocar uma annotation na frente do parâmetro User do método que é a @RequestBody
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User obj) {
+		obj = service.update(id, obj);
+		return ResponseEntity.ok().body(obj);
+	}
 
 }
