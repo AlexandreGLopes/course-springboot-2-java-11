@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.educandoweb.course.entities.enums.OrderStatus;
@@ -54,6 +56,14 @@ public class Order implements Serializable {
 	// ou seja, o parâmetro do annotation @OnToMany é feito pelo "id" que está na classe OrderItem e pelo ".order" que está na classe OrderItemPK (referindo ao "private Order order")
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
+	
+	// Só depois que fizemos essa classe Payment é que vamos obviamente na classe Order para poder adicionar o atributo Payment que a classe Order vai passar a ter
+	// Neste caso a classe Payment é dependente, porque você não pode ter um pagamento sem pedido. E a classe Order é independente porque você pode sim ter um pedido sem pagamento
+	// Assim, na CLASSE INDEPENDENTE (que é essa aqui) vamos colocar as annotations @OneToOne com alguns parâmetros
+	// ela será mappedBy "order" que é o nome do atributo referenciado lá do outro lado, na classe Payment
+	// já o cascade é para que nessa relação um para um tanto pedido quanto o pagamento tenham o mesmo código
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	private Payment payment;
 	
 	public Order() {
 	}
@@ -107,6 +117,14 @@ public class Order implements Serializable {
 	public Set<OrderItem> getItems() {
 		return items;
 	}
+	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 
 	@Override
 	public int hashCode() {
@@ -124,5 +142,5 @@ public class Order implements Serializable {
 		Order other = (Order) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
