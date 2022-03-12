@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -32,9 +35,13 @@ public class Product implements Serializable {
 	private Double price;
 	private String imgUrl;
 	
-	// Vamos usar o Set para garantir que não teremos mais de um produto da mesma categoria
-	// A annotation @Transient impede que o jpa tente interpretar o Set
-	@Transient
+	// Vamos usar o Set para garantir que não teremos mais de um item da mesma Category na lista
+	// Quando é @ManyToMany a regra relacional usamos o @JoinTable apenas numa das pontas da relação, aqui em Product no caso
+	// No @JoinTable vamos colocar as especificações da tabela de relação. O nome dela com o parametro "name"
+	// o nome da chave estrangeira DESTA CLASSE sob o parâmetro: "joinColumns = @JoinColumn(name ="
+	// o nome da chave estrangeira DA OUTRA CLASSE sob o parâmetro: "inverseJoinColumns = @JoinColumn(name ="
+	@ManyToMany
+	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	
 	public Product() {

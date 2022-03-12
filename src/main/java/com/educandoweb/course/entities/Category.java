@@ -9,8 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Serializable é para quando a gente quer os objetos possam ser transformados em cadeias de bytes. 
 //Isso para que o objeto possa trafegar na rede, ser gravado em arquivos, etc.
@@ -29,9 +34,13 @@ public class Category implements Serializable {
 	private Long id;
 	private String name;
 	
-	// Vamos usar o Set para garantir que não teremos mais de uma categoria do mesmo produto
-	// A annotation @Transient impede que o jpa tente interpretar o Set
-	@Transient
+	// Vamos usar o Set para garantir que não teremos mais de um item do mesmo Product na lista
+	// Annotation para fazer o mapeamento para transformar as coleções que têm nas duas classes (Category e Product) na tabela de associação que tem no modelo relacional do banco de dados
+	// No caso da outra ponta do annotation @ManyToMany, que é esta aqui, só colocamos o parâmetro "mappedBy =" e colocamos o nome do atributo da classe da outra ponta (a que está com as configurações detalhadas)
+	// Como a classes Category e Product tem uma associação de mão dupla ocorre o loop infinito ao chamar o Json no Postman
+	// para isso não acontecer, vamos usar a annotation @JsonIgnore aqui. Isso pois quando chamarmos o Product queremos ver cada Category associada a ele. Mas quando chamarmos as Category não queremos necessariamente ver cada Product associado a ele
+	@JsonIgnore
+	@ManyToMany(mappedBy = "categories")
 	private Set<Product> products = new HashSet<>();
 	
 	public Category() {
