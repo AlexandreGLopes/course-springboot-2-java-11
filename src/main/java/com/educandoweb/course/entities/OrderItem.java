@@ -33,7 +33,9 @@ public class OrderItem implements Serializable {
 	
 	public OrderItem() {
 	}
-
+	
+	// O construtor com os campos não receberá um id, mas sim parametros para cada um dos atributos que compõe a chave composta OrderItemPK
+	// Vamos usar os sets do OrderItemPK para adicionar os parametros no objeto id
 	public OrderItem(Order order, Product product, Integer quantity, Double price) {
 		super();
 		id.setOrder(order);
@@ -42,6 +44,8 @@ public class OrderItem implements Serializable {
 		this.price = price;
 	}
 	
+	// Abaixo temos os getters/setters do Order e do Product
+	// Isso porque para o exterior o item de pedido (OrderItem) não vai dar um getId com campo composto. Mas sim, vai dar um por um 
 	public Order getOrder() {
 		return id.getOrder();
 	}
@@ -57,6 +61,8 @@ public class OrderItem implements Serializable {
 	public void setProduct(Product product) {
 		id.setProduct(product);
 	}
+	
+	// Daqui para baixo os getters/setters normais da classe
 
 	public Integer getQuantity() {
 		return quantity;
