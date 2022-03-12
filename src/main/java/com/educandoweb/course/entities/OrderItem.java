@@ -94,6 +94,13 @@ public class OrderItem implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	
+	// camada lógica para ver o subtotal do item de pedido
+	// Temos que usar o get na frente porque é o padrão do Java EE
+	// se não for colocado o get na frente ele não vai aparecer automáticamente quando fizermos a requisição GET do JSON
+	public Double getSubTotal() {
+		return price * quantity;
+	}
 
 	@Override
 	public int hashCode() {

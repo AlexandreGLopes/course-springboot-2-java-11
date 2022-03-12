@@ -110,6 +110,7 @@ public class Product implements Serializable {
 		return categories;
 	}
 	
+	//  *************MUITO IMPORTANTE PARA ENTENDER ONDE COLOCAR O @JsonIgnore E A ASSOCIAÇÃO ENTRE TABELAS USANDO TABELAS RELACIONAIS********** 
 	// aqui no caso o método get do "Set<OrderItem> items" vai retornar uma lista de Order e não uma lista de OrderItems,
 	// porque não faz sentido um produto ter vários OrderItems, mas sim vários Orders.
 	// Diferente do Order que faz sentido ter vários OrderItems.

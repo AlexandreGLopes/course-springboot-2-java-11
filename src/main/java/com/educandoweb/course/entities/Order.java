@@ -125,6 +125,17 @@ public class Order implements Serializable {
 	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
+	
+	// camada lógica para ver o total do pedido
+	// Temos que usar o get na frente porque é o padrão do Java EE
+	// se não for colocado o get na frente ele não vai aparecer automáticamente quando fizermos a requisição GET do JSON
+	public Double getTotal() {
+		double sum = 0.0;
+		for (OrderItem orderItem : items) {
+			sum += orderItem.getSubTotal();
+		}
+		return sum;
+	}
 
 	@Override
 	public int hashCode() {

@@ -12,6 +12,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 //Serializable é para quando a gente quer os objetos possam ser transformados em cadeias de bytes. 
 //Isso para que o objeto possa trafegar na rede, ser gravado em arquivos, etc.
 
@@ -32,6 +34,8 @@ public class Payment implements Serializable {
 	// Só depois que fizemos essa classe Payment é que vamos obviamente na classe Order para poder adicionar o atributo Payment que a classe Order vai passar a ter
 	// Neste caso a classe Payment é dependente, porque você não pode ter um pagamento sem pedido. E a classe Order é independente porque você pode sim ter um pedido sem pagamento
 	// Assim, na CLASSE DEPENDENTE (que é essa aqui) vamos colocar as annotations @OneToOne e @MapsId
+	// Annotation @JsonIgnore: Aqui no Payment teremos que cortar a associação de mão dupla que temos com o Order. Se não, teremos o loop infinito
+	@JsonIgnore
 	@OneToOne
 	@MapsId
 	private Order order;
