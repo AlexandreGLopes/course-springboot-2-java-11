@@ -35,5 +35,13 @@ public class UserService {
 		// a operação obj.get() que vai retornar o objeto User que estiver dentro do optional
 		return obj.get();
 	}
+	
+	public User insert(User obj) {
+		return repository.save(obj);
+	}
+	
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}
 
 }
