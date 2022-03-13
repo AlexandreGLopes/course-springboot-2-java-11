@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.educandoweb.course.entities.User;
 import com.educandoweb.course.repositories.UserRepository;
+import com.educandoweb.course.services.exceptions.ResourceNotFoundException;
 
 // A camada de serviço é a que separa a camada do controlador das regras de negócio, deixando ele enxuto.
 // Ou seja, a camada de controlador vai fazer o meio de campo entre as ações do usuário e as regras de negócio
@@ -32,8 +33,13 @@ public class UserService {
 	public User findById(Long id) {
 		// vamos retornar um objeto optional do tipo User (esse optional existe desde o java 8)
 		Optional<User> obj = repository.findById(id);
+		/*
 		// a operação obj.get() que vai retornar o objeto User que estiver dentro do optional
 		return obj.get();
+		*/
+		// Antes estávamos usando o .get() acima; era ele que dava a exceção padrão código http 500 caso o user não existisse
+		// Mas agora vamos usar outro método do Optional chamado orElseThrow(). Este método tenta fazer o .get() mas se não tiver ele lança a exceção no argumento com a expressão lambda
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public User insert(User obj) {
