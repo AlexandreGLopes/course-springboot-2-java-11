@@ -3,6 +3,8 @@ package com.educandoweb.course.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -66,9 +68,14 @@ public class UserService {
 		// o .getOne() vai instanciar um User sem ir no banco de dados. Ele só vai deixar um objeto monitorado pelo Jpa para
 		// trabalhar com ele e em seguida efetuar uma opreçaão com o banco de dados. É melhor que trabalhar com o findById()
 		// porque ele só trabalha com o banco no final. Então, poupa recursos
-		User entity = repository.getOne(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			User entity = repository.getOne(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			// EntityNotFoundException porque este é o erro que é lançado quando tentamos fazer o update num dado que não existe
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
